@@ -1,0 +1,22 @@
+---
+title: "Class Enrollment"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+
+download.file("https://registrar.fas.harvard.edu/files/fas-registrar/files/class_enrollment_summary_by_term_2.25.20_0.xlsx", "./current_enrollment.xlsx")
+download.file("https://registrar.fas.harvard.edu/files/fas-registrar/files/class_enrollment_summary_by_term_3.22.19_0.xlsx", "./past_enrollment.xlsx")
+
+current <- read_excel("./current_enrollment.xlsx", skip = 3) %>% clean_names() %>% na.omit()
+past <- read_excel("./past_enrollment.xlsx", skip = 3) %>% clean_names() %>% na.omit()
+
+new <- current %>% anti_join(past, by="course_id")
+new %>% arrange(desc(total)) %>% head(5)
+```
+
+
